@@ -16,6 +16,7 @@ const featuredImageSchema = z.object({
 
 export const BaseWPSchema = z.object({
   id: z.number(),
+  slug: z.string(),
   title: z.object({
     rendered: z.string(),
   }),
@@ -26,6 +27,15 @@ export const BaseWPSchema = z.object({
   acf: z.object({
     subtitle: z.string(),
   }),
+});
+
+const gallerySchema = z.object({
+  large: imageSchema,
+  full: imageSchema,
+});
+
+export const GalleryPageSchema = BaseWPSchema.extend({
+  gallery: z.array(gallerySchema),
 });
 
 const proccessSchema = z.object({
@@ -59,3 +69,4 @@ export const PostSchema = BaseWPSchema.omit({
 export const PostsShema = z.array(PostSchema);
 
 export type Post = z.infer<typeof PostSchema>;
+export type Gallery = z.infer<typeof gallerySchema>;
