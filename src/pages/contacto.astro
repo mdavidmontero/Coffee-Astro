@@ -1,10 +1,13 @@
 ---
+import ContactForm from "@/components/contact/ContactForm.astro";
 import Layout from "../layouts/Layout.astro";
-import { BaseWPSchema } from "@/types";
+import { ContactPageSchema } from "@/types";
+import LocationMap from "@/components/contact/LocationMap.astro";
 const url = `${import.meta.env.API_URL}/pages?slug=contacto`;
 const res = await fetch(url);
 const json = await res.json();
-const data = BaseWPSchema.parse(json[0]);
+const data = ContactPageSchema.parse(json[0]);
+console.log(data);
 ---
 
 <Layout
@@ -12,5 +15,10 @@ const data = BaseWPSchema.parse(json[0]);
   subtitle={data.acf.subtitle}
   bgImage={data.featured_images.full.url}
 >
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-10"></div>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+    <ContactForm />
+  </div>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-5">
+    <LocationMap location={data.acf.location} />
+  </div>
 </Layout>
