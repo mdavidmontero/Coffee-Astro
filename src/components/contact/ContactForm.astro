@@ -1,3 +1,7 @@
+---
+
+---
+
 <div>
   <h3 class="text-coffee-900 font-black text-center text-2xl uppercase mb-5">
     Contacto
@@ -53,3 +57,37 @@
     />
   </form>
 </div>
+
+<script>
+  import { actions, isInputError } from "astro:actions";
+  import { Notyf } from "notyf";
+  import "notyf/notyf.min.css";
+
+  const form = document.querySelector("form");
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+    console.log(JSON.stringify([...formData]));
+    const { data, error } = await actions.contact.sendEmail(formData);
+    const inputErrors = isInputError(error) ? error.issues : [];
+    const notyf = new Notyf({
+      position: {
+        x: "right",
+        y: "top",
+      },
+      duration: 3000,
+      ripple: false,
+      dismissible: true,
+    });
+    if (inputErrors) {
+      inputErrors.forEach((error) => {
+        notyf.error(error.message);
+      });
+    }
+    if (data?.message && !data.error) {
+      notyf.success(data.message);
+      form.reset();
+    }
+  });
+</script>
