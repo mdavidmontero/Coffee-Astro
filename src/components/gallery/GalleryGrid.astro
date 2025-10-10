@@ -38,4 +38,7 @@ const { gallery } = Astro.props;
     pswpModule: () => import("photoswipe"),
   });
   lightbox.init();
+  document.addEventListener("astro:after-swap", function () {
+    lightbox.init();
+  });
 </script>
